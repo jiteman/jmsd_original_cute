@@ -1,4 +1,11 @@
 # CUTE
+-----
+origin: https://github.com/PeterSommerlad/CUTE.git
+71e1df93fd97d045374fbb3550fd4b8c7a36f0d2
+2019-07-12 11:52:01 +0200
+accommodate C++98/03 for tests as well
+-----
+
 C++ Unit Testing Easier: A Header-only C++ unit testing framework
 
 usually available as part of the Cevelop C++ IDE (http://cevelop.com)

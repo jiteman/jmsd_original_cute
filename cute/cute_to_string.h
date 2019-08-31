@@ -28,6 +28,9 @@
 
 #include <string>
 #include <algorithm>
+#ifdef USE_STD17
+#include <cstddef>
+#endif
 
 namespace cute {
 namespace cute_to_string {
@@ -82,6 +85,9 @@ namespace cute {
 namespace cute_to_string {
 		template <typename T>
 		std::ostream &to_stream(std::ostream &os,T const &t); // recursion needs forward
+#ifdef USE_STD17
+		inline std::ostream &to_stream(std::ostream &os,std::byte t); // recursion needs forward
+#endif
 
 		// the following code was stolen and adapted from Boost Exception library.
 		// it avoids compile errors, if a type used with ASSERT_EQUALS doesn't provide an output shift operator
@@ -129,7 +135,7 @@ namespace cute_to_string {
 				if (!first) os<<',';
 				else first=false;
 				os << '\n'; // use newlines so that CUTE's plug-in result viewer gives nice diffs
-				cute_to_string::to_stream<T>(os,t);
+				cute_to_string::to_stream(os,t);
 			}
 		};
 		//try print_pair with specialization of template function instead:
@@ -237,6 +243,11 @@ namespace cute_to_string {
 			select_built_in_shift_if<T,cute_to_string::is_output_streamable<T>::value > out(os);
 			return out(t);
 		}
+#ifdef USE_STD17
+		inline std::ostream &to_stream(std::ostream &os,std::byte b){
+			return os << "0x" << hexit(static_cast<std::underlying_type_t<std::byte>>(b));
+		}
+#endif
 #ifdef _MSC_VER
 		// special overloads because VC can not detect begin/end
 		inline std::ostream& to_stream(std::ostream &os,std::string const &s){

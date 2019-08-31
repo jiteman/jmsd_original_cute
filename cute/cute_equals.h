@@ -47,12 +47,13 @@ namespace cute {
 		bool do_equals_floating_with_delta(ExpectedValue const &expected
 				,ActualValue const &actual
 				,DeltaValue const &delta) {
-			return std::abs(delta)  >= std::abs(expected-actual);
+			using std::abs; // allow for user-defined types with abs overload
+			return bool(abs(delta) >= abs(expected-actual)); // Accommodate non-standard boolean type with explicit conversion
 		}
 		template <typename ExpectedValue, typename ActualValue, bool select_non_floating_point_type>
 		bool do_equals_floating(ExpectedValue const &expected
 					,ActualValue const &actual,const impl_place_for_traits::integral_constant<bool, select_non_floating_point_type>&){
-			return expected==actual; // normal case for most types uses operator==!
+			return bool(expected==actual); // normal case for most types uses operator==!, accommodate non bool operator ==
 		}
 		template <typename ExpectedValue, typename ActualValue>
 		bool do_equals_floating(ExpectedValue const &expected
